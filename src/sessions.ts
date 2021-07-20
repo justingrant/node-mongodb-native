@@ -210,7 +210,7 @@ export class ClientSession extends TypedEventEmitter<ClientSessionEvents> {
   /** @internal */
   pin(conn: Connection): void {
     if (this[kPinnedConnection]) {
-      throw TypeError('Cant pin multiple connections to the same session');
+      throw TypeError('Cannot pin multiple connections to the same session');
     }
 
     this[kPinnedConnection] = conn;
