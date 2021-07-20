@@ -80,7 +80,6 @@ describe('MongoOptions', function () {
     compressors: 'snappy', // TODO
     connectTimeoutMS: 123,
     directConnection: true,
-    loadBalanced: false,
     dbName: 'test',
     driverInfo: { name: 'MyDriver', platform: 'moonOS' },
     family: 6,

@@ -47,7 +47,7 @@ describe('StreamDescription - unit/cmap', function () {
         const description = new StreamDescription('a:27017', {});
 
         it('sets loadBalanced to false', function () {
-          expect(description).to.have.property('loadBalanced', undefined);
+          expect(description.loadBalanced).to.be.false;
         });
       });
     });
