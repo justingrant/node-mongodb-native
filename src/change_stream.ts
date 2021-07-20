@@ -1,11 +1,5 @@
 import Denque = require('denque');
-import {
-  MongoError,
-  AnyError,
-  isResumableError,
-  MongoDriverError,
-  MongoStreamClosedError
-} from './error';
+import { MongoError, AnyError, isResumableError, MongoDriverError } from './error';
 import { AggregateOperation, AggregateOptions } from './operations/aggregate';
 import {
   maxWireVersion,
@@ -686,17 +680,13 @@ function processNewChange<TSchema>(
   callback?: Callback<ChangeStreamDocument<TSchema>>
 ) {
   if (changeStream[kClosed]) {
-    if (callback) callback(new MongoStreamClosedError(CHANGESTREAM_CLOSED_ERROR));
+    if (callback) callback(new MongoDriverError(CHANGESTREAM_CLOSED_ERROR));
     return;
   }
 
   // a null change means the cursor has been notified, implicitly closing the change stream
   if (change == null) {
-    return closeWithError(
-      changeStream,
-      new MongoStreamClosedError(CHANGESTREAM_CLOSED_ERROR),
-      callback
-    );
+    return closeWithError(changeStream, new MongoDriverError(CHANGESTREAM_CLOSED_ERROR), callback);
   }
 
   if (change && !change._id) {
@@ -724,7 +714,7 @@ function processError<TSchema>(
 
   // If the change stream has been closed explicitly, do not process error.
   if (changeStream[kClosed]) {
-    if (callback) callback(new MongoStreamClosedError(CHANGESTREAM_CLOSED_ERROR));
+    if (callback) callback(new MongoDriverError(CHANGESTREAM_CLOSED_ERROR));
     return;
   }
 
@@ -784,7 +774,7 @@ function processError<TSchema>(
  */
 function getCursor<T>(changeStream: ChangeStream<T>, callback: Callback<ChangeStreamCursor<T>>) {
   if (changeStream[kClosed]) {
-    callback(new MongoStreamClosedError(CHANGESTREAM_CLOSED_ERROR));
+    callback(new MongoDriverError(CHANGESTREAM_CLOSED_ERROR));
     return;
   }
 
@@ -809,7 +799,7 @@ function processResumeQueue<TSchema>(changeStream: ChangeStream<TSchema>, err?: 
     const request = changeStream[kResumeQueue].pop();
     if (!err) {
       if (changeStream[kClosed]) {
-        request(new MongoStreamClosedError(CHANGESTREAM_CLOSED_ERROR));
+        request(new MongoDriverError(CHANGESTREAM_CLOSED_ERROR));
         return;
       }
       if (!changeStream.cursor) {
