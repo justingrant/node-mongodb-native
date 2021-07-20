@@ -44,6 +44,7 @@ export {
   MongoServerSelectionError,
   MongoParseError,
   MongoWriteConcernError,
+  MongoRuntimeError,
   MongoExpiredSessionError,
   MongoTransactionError,
   MongoKerberosError,
