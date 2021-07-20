@@ -6,7 +6,8 @@ import {
   MongoParseError,
   MongoDriverError,
   MongoCompatibilityError,
-  MongoInvalidArgumentError
+  MongoInvalidArgumentError,
+  MongoExpiredSessionError
 } from './error';
 import { WriteConcern, WriteConcernOptions, W } from './write_concern';
 import type { Server } from './sdam/server';
@@ -71,15 +72,18 @@ export function checkCollectionName(collectionName: string): void {
     collectionName.indexOf('$') !== -1 &&
     collectionName.match(/((^\$cmd)|(oplog\.\$main))/) == null
   ) {
+    // TODO(NODE-3483): Use MongoNamespace static method
     throw new MongoInvalidArgumentError("Collection names must not contain '$'");
   }
 
   if (collectionName.match(/^\.|\.$/) != null) {
+    // TODO(NODE-3483): Use MongoNamespace static method
     throw new MongoInvalidArgumentError("Collection names must not start or end with '.'");
   }
 
   // Validate that we are not passing 0x00 in the collection name
   if (collectionName.indexOf('\x00') !== -1) {
+    // TODO(NODE-3483): Use MongoNamespace static method
     throw new MongoInvalidArgumentError('Collection names cannot contain a null character');
   }
 }
@@ -255,8 +259,12 @@ export function executeLegacyOperation(
       const optionsIndex = args.length - 2;
       args[optionsIndex] = Object.assign({}, args[optionsIndex], { session: session });
     } else if (opOptions.session && opOptions.session.hasEnded) {
+<<<<<<< HEAD
       // TODO(NODE-3405): Replace this with MongoExpiredSessionError
       throw new MongoDriverError('Use of expired sessions is not permitted');
+=======
+      throw new MongoExpiredSessionError('Use of expired sessions is not permitted');
+>>>>>>> 30687cf72 (refactor(NODE-3405): replace MongoDriverError where appropriate)
     }
   }
 
@@ -583,7 +591,11 @@ export class MongoDBNamespace {
 
   static fromString(namespace?: string): MongoDBNamespace {
     if (!namespace) {
+<<<<<<< HEAD
       // TODO(NODE-3483): Replace with MongoNamespaceError
+=======
+      // TODO(NODE-3405): Implement error checking for namespace here
+>>>>>>> 30687cf72 (refactor(NODE-3405): replace MongoDriverError where appropriate)
       throw new MongoDriverError(`Cannot parse namespace from "${namespace}"`);
     }
 

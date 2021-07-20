@@ -13,7 +13,9 @@ import {
   MongoWriteConcernError,
   MONGODB_ERROR_CODES,
   MongoDriverError,
-  MongoServerError
+  MongoServerError,
+  MongoExpiredSessionError,
+  MongoTransactionError
 } from './error';
 import {
   now,
@@ -38,7 +40,7 @@ const minWireVersionForShardedTransactions = 8;
 
 function assertAlive(session: ClientSession, callback?: Callback): boolean {
   if (session.serverSession == null) {
-    const error = new MongoDriverError('Cannot use a session that has ended');
+    const error = new MongoExpiredSessionError('Cannot use a session that has ended');
     if (typeof callback === 'function') {
       callback(error);
       return false;
@@ -286,12 +288,12 @@ export class ClientSession extends TypedEventEmitter<ClientSessionEvents> {
    */
   startTransaction(options?: TransactionOptions): void {
     if (this[kSnapshotEnabled]) {
-      throw new MongoDriverError('Transactions are not allowed with snapshot sessions');
+      throw new MongoTransactionError('Transactions are not allowed with snapshot sessions');
     }
 
     assertAlive(this);
     if (this.inTransaction()) {
-      throw new MongoDriverError('Transaction already in progress');
+      throw new MongoTransactionError('Transaction already in progress');
     }
 
     const topologyMaxWireVersion = maxWireVersion(this.topology);
@@ -353,6 +355,7 @@ export class ClientSession extends TypedEventEmitter<ClientSessionEvents> {
    * This is here to ensure that ClientSession is never serialized to BSON.
    */
   toBSON(): never {
+    // TODO(NODE-3405): Replace with MongoBSONParseError
     throw new MongoDriverError('ClientSession cannot be serialized to BSON.');
   }
 
@@ -514,7 +517,7 @@ function endTransaction(session: ClientSession, commandName: string, callback: C
   const txnState = session.transaction.state;
 
   if (txnState === TxnState.NO_TRANSACTION) {
-    callback(new MongoDriverError('No transaction started'));
+    callback(new MongoTransactionError('No transaction started'));
     return;
   }
 
@@ -531,7 +534,7 @@ function endTransaction(session: ClientSession, commandName: string, callback: C
 
     if (txnState === TxnState.TRANSACTION_ABORTED) {
       callback(
-        new MongoDriverError('Cannot call commitTransaction after calling abortTransaction')
+        new MongoTransactionError('Cannot call commitTransaction after calling abortTransaction')
       );
       return;
     }
@@ -544,7 +547,7 @@ function endTransaction(session: ClientSession, commandName: string, callback: C
     }
 
     if (txnState === TxnState.TRANSACTION_ABORTED) {
-      callback(new MongoDriverError('Cannot call abortTransaction twice'));
+      callback(new MongoTransactionError('Cannot call abortTransaction twice'));
       return;
     }
 
@@ -553,7 +556,7 @@ function endTransaction(session: ClientSession, commandName: string, callback: C
       txnState === TxnState.TRANSACTION_COMMITTED_EMPTY
     ) {
       callback(
-        new MongoDriverError('Cannot call abortTransaction after calling commitTransaction')
+        new MongoTransactionError('Cannot call abortTransaction after calling commitTransaction')
       );
       return;
     }
@@ -811,7 +814,7 @@ export function applySession(
 ): MongoDriverError | undefined {
   // TODO: merge this with `assertAlive`, did not want to throw a try/catch here
   if (session.hasEnded) {
-    return new MongoDriverError('Attempted to use a session that has ended');
+    return new MongoExpiredSessionError('Attempted to use a session that has ended');
   }
 
   const serverSession = session.serverSession;
