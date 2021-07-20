@@ -201,7 +201,6 @@ function prepareDatabaseForSuite(suite, context) {
         return;
       }
 
-      console.log('err', err);
       throw err;
     });
 
