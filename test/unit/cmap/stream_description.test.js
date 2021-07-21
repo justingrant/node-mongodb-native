@@ -56,7 +56,7 @@ describe('StreamDescription - unit/cmap', function () {
       const description = new StreamDescription('a:27017');
 
       it('defaults logicalSessionTimeoutMinutes to undefined', function () {
-        expect(description.logicalSessionTimeoutMinutes).to.not.exist;
+        expect(description).to.have.property('logicalSessionTimeoutMinutes', undefined);
       });
 
       it('defaults loadBalanced to false', function () {
