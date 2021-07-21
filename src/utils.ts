@@ -259,12 +259,7 @@ export function executeLegacyOperation(
       const optionsIndex = args.length - 2;
       args[optionsIndex] = Object.assign({}, args[optionsIndex], { session: session });
     } else if (opOptions.session && opOptions.session.hasEnded) {
-<<<<<<< HEAD
-      // TODO(NODE-3405): Replace this with MongoExpiredSessionError
-      throw new MongoDriverError('Use of expired sessions is not permitted');
-=======
       throw new MongoExpiredSessionError('Use of expired sessions is not permitted');
->>>>>>> 30687cf72 (refactor(NODE-3405): replace MongoDriverError where appropriate)
     }
   }
 
@@ -591,11 +586,7 @@ export class MongoDBNamespace {
 
   static fromString(namespace?: string): MongoDBNamespace {
     if (!namespace) {
-<<<<<<< HEAD
       // TODO(NODE-3483): Replace with MongoNamespaceError
-=======
-      // TODO(NODE-3405): Implement error checking for namespace here
->>>>>>> 30687cf72 (refactor(NODE-3405): replace MongoDriverError where appropriate)
       throw new MongoDriverError(`Cannot parse namespace from "${namespace}"`);
     }
 

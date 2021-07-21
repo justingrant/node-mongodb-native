@@ -151,14 +151,14 @@ export class GridFSBucketWriteStream extends Writable {
     const Promise = PromiseProvider.get();
     let error: MongoDriverError;
     if (this.state.streamEnd) {
-      error = new MongoDriverError('Cannot abort a stream that has already completed');
+      error = new MongoStreamClosedError('Cannot abort a stream that has already completed');
       if (typeof callback === 'function') {
         return callback(error);
       }
       return Promise.reject(error);
     }
     if (this.state.aborted) {
-      error = new MongoDriverError('Cannot call abort() on a stream twice');
+      error = new MongoStreamClosedError('Cannot call abort() on a stream twice');
       if (typeof callback === 'function') {
         return callback(error);
       }
