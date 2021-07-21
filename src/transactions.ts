@@ -45,10 +45,7 @@ const stateMachine: { [state in TxnState]: TxnState[] } = {
   ]
 };
 
-const ACTIVE_STATES: TxnState[] = [
-  TxnState.STARTING_TRANSACTION,
-  TxnState.TRANSACTION_IN_PROGRESS
-];
+const ACTIVE_STATES: TxnState[] = [TxnState.STARTING_TRANSACTION, TxnState.TRANSACTION_IN_PROGRESS];
 
 const COMMITTED_STATES: TxnState[] = [
   TxnState.TRANSACTION_COMMITTED,

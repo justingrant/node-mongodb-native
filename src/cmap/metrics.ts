@@ -44,9 +44,10 @@ export class ConnectionPoolMetrics {
   /**
    * Return information about the cmap metrics as a string.
    */
-  info(): string {
+  info(maxPoolSize: number): string {
     return (
       'Timed out while checking out a connection from connection pool: ' +
+      `maxPoolSize: ${maxPoolSize}, ` +
       `connections in use by cursors: ${this.cursorConnections}, ` +
       `connections in use by transactions: ${this.txnConnections}, ` +
       `connections in use by other operations: ${this.otherConnections}`

@@ -261,7 +261,7 @@ export class ConnectionPool extends TypedEventEmitter<ConnectionPoolEvents> {
    * Get the metrics information for the pool when a wait queue timeout occurs.
    */
   private waitQueueErrorMetrics(): string {
-    return `. maxPoolSize: ${this.options.maxPoolSize}, ${this[kMetrics].info()}`;
+    return this[kMetrics].info(this.options.maxPoolSize);
   }
 
   /**

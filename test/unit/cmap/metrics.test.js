@@ -24,8 +24,9 @@ describe('ConnectionPoolMetrics', function () {
     const metrics = new ConnectionPoolMetrics();
 
     it('returns the metrics information', function () {
-      expect(metrics.info()).to.equal(
+      expect(metrics.info(5)).to.equal(
         'Timed out while checking out a connection from connection pool: ' +
+          'maxPoolSize: 5, ' +
           'connections in use by cursors: 0, ' +
           'connections in use by transactions: 0, ' +
           'connections in use by other operations: 0'
