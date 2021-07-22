@@ -533,12 +533,8 @@ function createConnection(pool: ConnectionPool, callback?: Callback<Connection>)
     pool.emit(ConnectionPool.CONNECTION_CREATED, new ConnectionCreatedEvent(pool, connection));
 
     if (pool.loadBalanced) {
-      connection.on(Connection.PINNED, pinType => {
-        pool[kMetrics].markPinned(pinType);
-      });
-      connection.on(Connection.UNPINNED, pinType => {
-        pool[kMetrics].markUnpinned(pinType);
-      });
+      connection.on(Connection.PINNED, pinType => pool[kMetrics].markPinned(pinType));
+      connection.on(Connection.UNPINNED, pinType => pool[kMetrics].markUnpinned(pinType));
 
       const serviceId = connection.serviceId;
       if (serviceId) {
