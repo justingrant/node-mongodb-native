@@ -160,11 +160,9 @@ export async function runUnifiedTest(
       trace(operation.name);
       try {
         await executeOperationAndCheck(operation, entities, utilClient);
-      } catch (err) {
+      } finally {
         // clean up all sessions on failed test, and rethrow
         await terminateOpenTransactions(utilClient);
-
-        throw err;
       }
     }
 
