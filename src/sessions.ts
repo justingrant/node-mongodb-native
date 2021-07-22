@@ -1,40 +1,38 @@
-import { PromiseProvider } from './promise_provider';
-import { Binary, Long, Timestamp, Document } from './bson';
-import { ReadPreference } from './read_preference';
-import { isTransactionCommand, TxnState, Transaction, TransactionOptions } from './transactions';
-import { resolveClusterTime, ClusterTime } from './sdam/common';
+import { Binary, Document, Long, Timestamp } from './bson';
+import type { CommandOptions } from './cmap/connection';
 import { isSharded } from './cmap/wire_protocol/shared';
+import type { AbstractCursor } from './cursor/abstract_cursor';
 import {
-  MongoError,
-  MongoInvalidArgumentError,
   isRetryableError,
-  MongoCompatibilityError,
-  MongoNetworkError,
-  MongoWriteConcernError,
   MONGODB_ERROR_CODES,
   MongoDriverError,
-  MongoServerError,
+  MongoError,
   MongoExpiredSessionError,
-  MongoTransactionError
+  MongoNetworkError,
+  MongoServerError,
+  MongoTransactionError,
+  MongoWriteConcernError
 } from './error';
+import type { MongoOptions } from './mongo_client';
+import { TypedEventEmitter } from './mongo_types';
+import { executeOperation } from './operations/execute_operation';
+import { RunAdminCommandOperation } from './operations/run_command';
+import { PromiseProvider } from './promise_provider';
+import { ReadConcernLevel } from './read_concern';
+import { ReadPreference } from './read_preference';
+import { ClusterTime, resolveClusterTime } from './sdam/common';
+import type { Topology } from './sdam/topology';
+import { isTransactionCommand, Transaction, TransactionOptions, TxnState } from './transactions';
 import {
-  now,
   calculateDurationInMs,
   Callback,
   isPromiseLike,
-  uuidV4,
   maxWireVersion,
-  maybePromise
+  maybePromise,
+  now,
+  uuidV4
 } from './utils';
-import type { Topology } from './sdam/topology';
-import type { MongoOptions } from './mongo_client';
-import { executeOperation } from './operations/execute_operation';
-import { RunAdminCommandOperation } from './operations/run_command';
-import type { AbstractCursor } from './cursor/abstract_cursor';
-import type { CommandOptions } from './cmap/connection';
 import type { WriteConcern } from './write_concern';
-import { TypedEventEmitter } from './mongo_types';
-import { ReadConcernLevel } from './read_concern';
 
 const minWireVersionForShardedTransactions = 8;
 
@@ -355,7 +353,7 @@ export class ClientSession extends TypedEventEmitter<ClientSessionEvents> {
    * This is here to ensure that ClientSession is never serialized to BSON.
    */
   toBSON(): never {
-    // TODO(NODE-3405): Replace with MongoBSONParseError
+    // TODO(NODE-3484): Replace with MongoBSONParseError
     throw new MongoDriverError('ClientSession cannot be serialized to BSON.');
   }
 
