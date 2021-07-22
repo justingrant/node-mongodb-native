@@ -10,11 +10,6 @@ const {
 const { ObjectId } = require('bson');
 const { HostAddress } = require('../../src/utils');
 
-const DEFAULT_HELLO_50 = {
-  ...DEFAULT_ISMASTER_36,
-  serverId: new ObjectId()
-};
-
 /**
  * @callback GetHostAddress
  * @returns {import('../../src/mongo_client').HostAddress}
@@ -77,6 +72,5 @@ module.exports = {
   createServer,
   cleanup,
   DEFAULT_ISMASTER,
-  DEFAULT_ISMASTER_36,
-  DEFAULT_HELLO_50
+  DEFAULT_ISMASTER_36
 };
