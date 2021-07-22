@@ -429,6 +429,11 @@ export class ConnectionPool extends TypedEventEmitter<ConnectionPoolEvents> {
    *
    * NOTE: please note the required signature of `fn`
    *
+   * @remarks When in load balancer mode, connections can be pinned to cursors or transactions.
+   *   In these cases we pass the connection in to this method to ensure it is used and a new
+   *   connection is not checked out.
+   *
+   * @param conn - A pinned connection for use in load balancing mode.
    * @param fn - A function which operates on a managed connection
    * @param callback - The original callback
    */
