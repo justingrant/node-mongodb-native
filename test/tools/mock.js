@@ -7,7 +7,6 @@ const {
   DEFAULT_ISMASTER_36
   // eslint-disable-next-line no-restricted-modules
 } = require('mongodb-mock-server');
-const { ObjectId } = require('bson');
 const { HostAddress } = require('../../src/utils');
 
 /**

@@ -8,11 +8,11 @@ import {
 } from '../error';
 import { Aspect, AbstractOperation } from './operation';
 import { maxWireVersion, maybePromise, Callback } from '../utils';
-import { ServerType } from '../sdam/common';
 import type { Server } from '../sdam/server';
 import type { Topology } from '../sdam/topology';
 import type { ClientSession } from '../sessions';
 import type { Document } from '../bson';
+import { supportsRetryableWrites } from '../utils';
 
 const MMAPv1_RETRY_WRITES_ERROR_CODE = MONGODB_ERROR_CODES.IllegalOperation;
 const MMAPv1_RETRY_WRITES_ERROR_MESSAGE =
@@ -246,13 +246,4 @@ function executeWithServerSelection(
 
 function shouldRetryWrite(err: any) {
   return err instanceof MongoError && err.hasErrorLabel('RetryableWriteError');
-}
-
-function supportsRetryableWrites(server: Server) {
-  return (
-    server.loadBalanced ||
-    (server.description.maxWireVersion >= 6 &&
-      server.description.logicalSessionTimeoutMinutes &&
-      server.description.type !== ServerType.Standalone)
-  );
 }

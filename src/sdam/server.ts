@@ -18,7 +18,6 @@ import {
   EventEmitterWithState
 } from '../utils';
 import {
-  ServerType,
   STATE_CLOSED,
   STATE_CLOSING,
   STATE_CONNECTING,
@@ -56,6 +55,7 @@ import type { Document } from '../bson';
 import type { AutoEncrypter } from '../deps';
 import type { ServerApi } from '../mongo_client';
 import { TypedEventEmitter } from '../mongo_types';
+import { supportsRetryableWrites } from '../utils';
 
 const stateTransition = makeStateMachine({
   [STATE_CLOSED]: [STATE_CLOSED, STATE_CONNECTING],
@@ -459,15 +459,6 @@ Object.defineProperty(Server.prototype, 'clusterTime', {
     this.s.topology.clusterTime = clusterTime;
   }
 });
-
-function supportsRetryableWrites(server: Server) {
-  return (
-    server.loadBalanced ||
-    (server.description.maxWireVersion >= 6 &&
-      server.description.logicalSessionTimeoutMinutes &&
-      server.description.type !== ServerType.Standalone)
-  );
-}
 
 function calculateRoundTripTime(oldRtt: number, duration: number): number {
   if (oldRtt === -1) {

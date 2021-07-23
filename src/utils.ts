@@ -5,6 +5,7 @@ import { AnyError, MongoParseError, MongoDriverError } from './error';
 import { WriteConcern, WriteConcernOptions, W } from './write_concern';
 import type { Server } from './sdam/server';
 import type { Topology } from './sdam/topology';
+import { ServerType } from './sdam/common';
 import type { Db } from './db';
 import type { Collection } from './collection';
 import type { OperationOptions, Hint } from './operations/operation';
@@ -1388,4 +1389,18 @@ export function emitWarningOnce(message: string): void {
     emittedWarnings.add(message);
     return emitWarning(message);
   }
+}
+
+/**
+ * Determine if a server supports retryable writes.
+ *
+ * @internal
+ */
+export function supportsRetryableWrites(server: Server): boolean | undefined | number {
+  return (
+    server.loadBalanced ||
+    (server.description.maxWireVersion >= 6 &&
+      server.description.logicalSessionTimeoutMinutes &&
+      server.description.type !== ServerType.Standalone)
+  );
 }

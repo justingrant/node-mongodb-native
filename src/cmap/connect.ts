@@ -24,8 +24,8 @@ import type { Socket, SocketConnectOpts } from 'net';
 import type { TLSSocket, ConnectionOptions as TLSConnectionOpts } from 'tls';
 
 const FAKE_MONGODB_SERVICE_ID =
-  typeof process.env.FAKE_MONGODB_SERVICE_ID === 'string'
-  && process.env.FAKE_MONGODB_SERVICE_ID.toLowerCase() === 'true';
+  typeof process.env.FAKE_MONGODB_SERVICE_ID === 'string' &&
+  process.env.FAKE_MONGODB_SERVICE_ID.toLowerCase() === 'true';
 
 /** @public */
 export type Stream = Socket | TLSSocket;
