@@ -8,15 +8,15 @@ describe('ConnectionPoolMetrics', function () {
     const metrics = new ConnectionPoolMetrics();
 
     it('defaults txnConnections to zero', function () {
-      expect(metrics.txnConnections).to.equal(0);
+      expect(metrics).property('txnConnections').to.equal(0);
     });
 
     it('defaults cursorConnections to zero', function () {
-      expect(metrics.cursorConnections).to.equal(0);
+      expect(metrics).property('cursorConnections').to.equal(0);
     });
 
     it('defaults otherConnections to zero', function () {
-      expect(metrics.otherConnections).to.equal(0);
+      expect(metrics).property('otherConnections').to.equal(0);
     });
   });
 
