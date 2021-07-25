@@ -248,17 +248,16 @@ export class ClientSession extends TypedEventEmitter<ClientSessionEvents> {
     callback?: Callback<void>
   ): void | Promise<void> {
     if (typeof options === 'function') (callback = options), (options = {});
-    const _options = options ?? ({} as EndSessionOptions);
-    if (_options.force == null) _options.force = true;
+    const finalOptions = { force: true, ...options };
 
     return maybePromise(callback, done => {
       if (this.hasEnded) {
-        maybeClearPinnedConnection(this, _options);
+        maybeClearPinnedConnection(this, finalOptions);
         return done();
       }
 
       const completeEndSession = () => {
-        maybeClearPinnedConnection(this, _options);
+        maybeClearPinnedConnection(this, finalOptions);
 
         // release the server session back to the pool
         this.sessionPool.release(this.serverSession);
