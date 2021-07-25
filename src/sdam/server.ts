@@ -542,6 +542,11 @@ function makeOperationHandler(
           session.serverSession.isDirty = true;
         }
 
+        // TODO: must not apply when running `commitTransaction`
+        if (inActiveTransaction(session, cmd) && !err.hasErrorLabel('TransientTransactionError')) {
+          err.addErrorLabel('TransientTransactionError');
+        }
+
         if (
           (isRetryableWritesEnabled(server.s.topology) || isTransactionCommand(cmd)) &&
           supportsRetryableWrites(server) &&

@@ -558,9 +558,6 @@ export class MongoNetworkError extends MongoError {
     if (options && typeof options.beforeHandshake === 'boolean') {
       this[kBeforeHandshake] = options.beforeHandshake;
     }
-
-    // TODO: must not apply when running `commitTransaction`
-    this.addErrorLabel('TransientTransactionError');
   }
 
   get name(): string {

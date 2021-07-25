@@ -182,6 +182,7 @@ function generateTopologyTests(testSuites, testContext, filter) {
 
 // Test runner helpers
 function prepareDatabaseForSuite(suite, context) {
+  console.log('prepareDatabaseForSuite');
   context.dbName = suite.database_name || 'spec_db';
   context.collectionName = suite.collection_name || 'spec_collection';
 
