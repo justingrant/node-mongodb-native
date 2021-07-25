@@ -4,16 +4,9 @@ export class ConnectionPoolMetrics {
   static readonly CURSOR = 'cursor' as const;
   static readonly OTHER = 'other' as const;
 
-  txnConnections!: number;
-  cursorConnections!: number;
-  otherConnections!: number;
-
-  /**
-   * Create the metrics object.
-   */
-  constructor() {
-    this.reset();
-  }
+  txnConnections = 0;
+  cursorConnections = 0;
+  otherConnections = 0;
 
   /**
    * Mark a connection as pinned for a specific operation.
