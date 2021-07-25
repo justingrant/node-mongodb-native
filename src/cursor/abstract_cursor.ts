@@ -371,13 +371,10 @@ export abstract class AbstractCursor<
   close(options: CursorCloseOptions): Promise<void>;
   close(options: CursorCloseOptions, callback: Callback): void;
   close(options?: CursorCloseOptions | Callback, callback?: Callback): Promise<void> | void {
-    if (typeof options === 'function') (callback = options), (options = {});
-    options = options ?? {};
-
-    const needsToEmitClosed = !this[kClosed];
-    this[kClosed] = true;
-
-    return maybePromise(callback, done => cleanupCursor(this, { needsToEmitClosed }, done));
+    if (typeof options === 'function') {
+      callback = options;
+    }
+    return maybePromise(callback, done => cleanupCursor(this, {}, done));
   }
 
   /**
@@ -726,7 +723,7 @@ function cursorIsDead(cursor: AbstractCursor): boolean {
 
 function cleanupCursor(
   cursor: AbstractCursor,
-  options: { error?: AnyError | undefined; needsToEmitClosed?: boolean } | undefined,
+  options: { error?: AnyError | undefined } | undefined,
   callback: Callback
 ): void {
   const cursorId = cursor[kId];
@@ -734,7 +731,6 @@ function cleanupCursor(
   const server = cursor[kServer];
   const session = cursor[kSession];
   const error = options?.error;
-  const needsToEmitClosed = options?.needsToEmitClosed ?? cursor[kDocuments].length === 0;
 
   if (error) {
     if (cursor.loadBalanced && error instanceof MongoNetworkError) {
@@ -743,14 +739,8 @@ function cleanupCursor(
   }
 
   if (cursorId == null || server == null || cursorId.isZero() || cursorNs == null) {
-    // TODO: Maybe at a later point in time rename this option. The previous
-    // code could have the cursor emit the close event multiple times. Now it
-    // will only emit once but changing the option name is a backwards breaking
-    // change.
-    if (needsToEmitClosed) {
-      cursor[kClosed] = true;
-      cursor[kId] = Long.ZERO;
-    }
+    cursor[kClosed] = true;
+    cursor[kId] = Long.ZERO;
     return completeCleanup();
   }
 
