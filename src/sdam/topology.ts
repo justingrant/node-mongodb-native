@@ -423,12 +423,12 @@ export class Topology extends TypedEventEmitter<TopologyEvents> {
     // In load balancer mode we need to fake a server description getting
     // emitted from the monitor, since the monitor doesn't exist.
     if (this.s.options.loadBalanced) {
-      serverDescriptions.forEach(description => {
+      for (const description of serverDescriptions) {
         const newDescription = new ServerDescription(description.hostAddress, undefined, {
           loadBalanced: this.s.options.loadBalanced
         });
         this.serverUpdateHandler(newDescription);
-      });
+      }
     }
 
     const readPreference = options.readPreference ?? ReadPreference.primary;
