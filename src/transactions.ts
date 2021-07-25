@@ -45,13 +45,16 @@ const stateMachine: { [state in TxnState]: TxnState[] } = {
   ]
 };
 
-const ACTIVE_STATES: TxnState[] = [TxnState.STARTING_TRANSACTION, TxnState.TRANSACTION_IN_PROGRESS];
+const ACTIVE_STATES: Set<TxnState> = new Set([
+  TxnState.STARTING_TRANSACTION,
+  TxnState.TRANSACTION_IN_PROGRESS
+]);
 
-const COMMITTED_STATES: TxnState[] = [
+const COMMITTED_STATES: Set<TxnState> = new Set([
   TxnState.TRANSACTION_COMMITTED,
   TxnState.TRANSACTION_COMMITTED_EMPTY,
   TxnState.TRANSACTION_ABORTED
-];
+]);
 
 /**
  * Configuration options for a transaction.
@@ -136,11 +139,11 @@ export class Transaction {
    * @returns Whether this session is presently in a transaction
    */
   get isActive(): boolean {
-    return ACTIVE_STATES.includes(this.state);
+    return ACTIVE_STATES.has(this.state);
   }
 
   get isCommitted(): boolean {
-    return COMMITTED_STATES.includes(this.state);
+    return COMMITTED_STATES.has(this.state);
   }
   /**
    * Transition the transaction in the state machine
