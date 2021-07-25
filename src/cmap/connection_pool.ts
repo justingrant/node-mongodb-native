@@ -545,13 +545,12 @@ function createConnection(pool: ConnectionPool, callback?: Callback<Connection>)
       if (serviceId) {
         let generation;
         const sid = serviceId.toHexString();
-        if (!pool.serviceGenerations.has(sid)) {
-          generation = 0;
-          pool.serviceGenerations.set(sid, generation);
+        if ((generation = pool.serviceGenerations.get(sid))) {
+          connection.generation = generation;
         } else {
-          generation = pool.serviceGenerations.get(sid);
+          pool.serviceGenerations.set(sid, 0);
+          connection.generation = 0;
         }
-        connection.generation = generation as number;
       }
     }
 
