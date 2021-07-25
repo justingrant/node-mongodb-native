@@ -18,7 +18,7 @@ import {
   MIN_SUPPORTED_SERVER_VERSION
 } from './wire_protocol/constants';
 import type { Document } from '../bson';
-import { ObjectId, Int32 } from '../bson';
+import { Int32 } from '../bson';
 
 import type { Socket, SocketConnectOpts } from 'net';
 import type { TLSSocket, ConnectionOptions as TLSConnectionOpts } from 'tls';
@@ -136,9 +136,7 @@ function performInitialHandshake(
       if (options.loadBalanced) {
         // TODO: Durran: Remove when server support exists. (NODE-3431)
         if (FAKE_MONGODB_SERVICE_ID) {
-          response.serviceId = response.topologyVersion
-            ? response.topologyVersion.processId
-            : new ObjectId();
+          response.serviceId = response.topologyVersion.processId;
         }
         if (!response.serviceId) {
           return callback(
