@@ -43,7 +43,6 @@ import {
   CommandOptions,
   APM_EVENTS
 } from '../cmap/connection';
-import type { Long } from '../bson';
 import type { Topology } from './topology';
 import type {
   ServerHeartbeatFailedEvent,
@@ -51,7 +50,7 @@ import type {
   ServerHeartbeatSucceededEvent
 } from './events';
 import type { ClientSession } from '../sessions';
-import type { Document } from '../bson';
+import type { Document, Long } from '../bson';
 import type { AutoEncrypter } from '../deps';
 import type { ServerApi } from '../mongo_client';
 import { TypedEventEmitter } from '../mongo_types';
