@@ -542,7 +542,7 @@ function makeOperationHandler(
           session.serverSession.isDirty = true;
         }
 
-        // TODO: must not apply when running `commitTransaction`
+        // inActiveTransaction check handles commit and abort.
         if (inActiveTransaction(session, cmd) && !err.hasErrorLabel('TransientTransactionError')) {
           err.addErrorLabel('TransientTransactionError');
         }
