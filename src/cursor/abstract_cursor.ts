@@ -44,6 +44,7 @@ export const CURSOR_FLAGS = [
 ] as const;
 
 /** @public */
+// TODO: Remove this as the option is never used. (NODE-3489)
 export interface CursorCloseOptions {
   /** Bypass calling killCursors when closing the cursor. */
   skipKillCursors?: boolean;
