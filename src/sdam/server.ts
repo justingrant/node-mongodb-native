@@ -308,7 +308,7 @@ export class Server extends TypedEventEmitter<ServerEvents> {
     // NOTE: This is a hack! We can't retrieve the connections used for executing an operation
     //       (and prevent them from being checked back in) at the point of operation execution.
     //       This should be considered as part of the work for NODE-2882
-    if (session && conn == null && this.loadBalanced && isPinnableCommand(cmd, session)) {
+    if (this.isLoadBalanced && session && conn == null && isPinnableCommand(cmd, session)) {
       this.s.pool.checkOut((err, checkedOut) => {
         if (err || checkedOut == null) {
           if (callback) return callback(err);
