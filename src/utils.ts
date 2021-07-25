@@ -1400,11 +1400,11 @@ export function emitWarningOnce(message: string): void {
  *
  * @internal
  */
-export function supportsRetryableWrites(server: Server): boolean | undefined | number {
+export function supportsRetryableWrites(server: Server): boolean {
   return (
-    server.loadBalanced ||
+    !!server.loadBalanced ||
     (server.description.maxWireVersion >= 6 &&
-      server.description.logicalSessionTimeoutMinutes &&
+      !!server.description.logicalSessionTimeoutMinutes &&
       server.description.type !== ServerType.Standalone)
   );
 }
