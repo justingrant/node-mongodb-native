@@ -743,11 +743,19 @@ function cleanupCursor(
   }
 
   if (cursorId == null || server == null || cursorId.isZero() || cursorNs == null) {
+    // TODO: Maybe at a later point in time rename this option. The previous
+    // code could have the cursor emit the close event multiple times. Now it
+    // will only emit once but changing the option name is a backwards breaking
+    // change.
     if (needsToEmitClosed) {
       cursor[kClosed] = true;
       cursor[kId] = Long.ZERO;
-      cursor.emit(AbstractCursor.CLOSE);
     }
+    return completeCleanup();
+  }
+
+  function completeCleanup() {
+    cursor.emit(AbstractCursor.CLOSE);
 
     if (session) {
       if (session.owner === cursor) {
@@ -758,25 +766,6 @@ function cleanupCursor(
         maybeClearPinnedConnection(session, { error });
       }
     }
-
-    return callback();
-  }
-
-  function completeCleanup() {
-    if (session) {
-      if (session.owner === cursor) {
-        return session.endSession({ error }, () => {
-          cursor.emit(AbstractCursor.CLOSE);
-          callback();
-        });
-      }
-
-      if (!session.inTransaction()) {
-        maybeClearPinnedConnection(session, { error });
-      }
-    }
-
-    cursor.emit(AbstractCursor.CLOSE);
     return callback();
   }
 
