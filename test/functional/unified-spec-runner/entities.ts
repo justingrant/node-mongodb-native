@@ -33,7 +33,6 @@ import type {
 import { patchCollectionOptions, patchDbOptions } from './unified-utils';
 import { expect } from 'chai';
 import { TestConfiguration } from './runner';
-import { MongoStreamError } from '../../../src/error';
 
 interface UnifiedChangeStream extends ChangeStream {
   eventCollector: InstanceType<typeof import('../../tools/utils')['EventCollector']>;
@@ -392,7 +391,7 @@ export class EntitiesMap<E = Entity> extends Map<string, E> {
 
         map.set(entity.bucket.id, new GridFSBucket(db, options));
       } else if ('stream' in entity) {
-        throw new MongoStreamError(`Unsupported Entity ${JSON.stringify(entity)}`);
+        throw new Error(`Unsupported Entity ${JSON.stringify(entity)}`);
       } else {
         throw new Error(`Unsupported Entity ${JSON.stringify(entity)}`);
       }
