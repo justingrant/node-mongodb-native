@@ -87,7 +87,6 @@ export function executeOperation<
         owner = Symbol();
         session = topology.startSession({ owner, explicit: false });
       } else if (session.hasEnded) {
-        // TODO(NODE-3405): Change this out for MongoExpiredSessionError
         return cb(new MongoDriverError('Use of expired sessions is not permitted'));
       } else if (session.snapshotEnabled && !topology.capabilities.supportsSnapshotReads) {
         return cb(new MongoDriverError('Snapshot reads require MongoDB 5.0 or later'));
@@ -131,7 +130,6 @@ function executeWithServerSelection(
 
   if (inTransaction && !readPreference.equals(ReadPreference.primary)) {
     callback(
-      // TODO(NODE-3405): Change this out for MongoTransactionError
       new MongoDriverError(
         `Read preference in a transaction must be primary, not: ${readPreference.mode}`
       )
@@ -193,7 +191,6 @@ function executeWithServerSelection(
     session.inTransaction()
   ) {
     callback(
-      // TODO(NODE-3405): Change this out for MongoTransactionError
       new MongoDriverError(
         `Read preference in a transaction must be primary, not: ${readPreference.mode}`
       )

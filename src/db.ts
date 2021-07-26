@@ -749,7 +749,6 @@ function validateDatabaseName(databaseName: string) {
   const invalidChars = [' ', '.', '$', '/', '\\'];
   for (let i = 0; i < invalidChars.length; i++) {
     if (databaseName.indexOf(invalidChars[i]) !== -1)
-      // TODO(NODE-3405): Change this out for a child of MongoParseError
       throw new MongoDriverError(
         `database names cannot contain the character '${invalidChars[i]}'`
       );
