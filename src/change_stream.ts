@@ -51,7 +51,7 @@ const CHANGE_DOMAIN_TYPES = {
 const NO_RESUME_TOKEN_ERROR =
   'A change stream document has been received that lacks a resume token (_id).';
 const NO_CURSOR_ERROR = 'ChangeStream has no cursor';
-const CHANGESTREAM_CLOSED_ERROR = 'ChangeStream has been closed';
+const CHANGESTREAM_CLOSED_ERROR = 'ChangeStream is closed';
 
 /** @public */
 export interface ResumeOptions {
@@ -259,9 +259,8 @@ export class ChangeStream<TSchema extends Document = Document> extends TypedEven
     } else if (parent instanceof MongoClient) {
       this.type = CHANGE_DOMAIN_TYPES.CLUSTER;
     } else {
-      // TODO(NODE-3404): Replace this with MongoChangeStreamError
       throw new MongoDriverError(
-        'Parent provided to ChangeStream constructor must an instance of Collection, Db, or MongoClient'
+        'parent provided to ChangeStream constructor is not an instance of Collection, Db, or MongoClient'
       );
     }
 
@@ -365,7 +364,6 @@ export class ChangeStream<TSchema extends Document = Document> extends TypedEven
    */
   stream(options?: CursorStreamOptions): Readable {
     this.streamOptions = options;
-    // TODO(NODE-3404): Replace this with MongoChangeStreamError
     if (!this.cursor) throw new MongoDriverError(NO_CURSOR_ERROR);
     return this.cursor.stream(options);
   }
