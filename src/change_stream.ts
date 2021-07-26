@@ -638,7 +638,7 @@ function waitForTopologyConnected(
     }
 
     if (calculateDurationInMs(start) > timeout) {
-      // TODO: Replace with MongoNetworkTimeoutError
+      // TODO(NODE-3497): Replace with MongoNetworkTimeoutError
       return callback(new MongoDriverError('Timed out waiting for connection'));
     }
 
