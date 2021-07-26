@@ -67,8 +67,7 @@ export function decompress(
 ): void {
   if (compressorID < 0 || compressorID > Math.max(2)) {
     throw new MongoDecompressionError(
-      `Server sent message compressed using an unsupported compressor.` +
-        ` (Received compressor ID ${compressorID})`
+      `Server sent message compressed using an unsupported compressor. (Received compressor ID ${compressorID})`
     );
   }
 
