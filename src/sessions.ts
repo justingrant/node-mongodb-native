@@ -863,7 +863,7 @@ export class ServerSessionPool {
   release(session: ServerSession): void {
     const sessionTimeoutMinutes = this.topology.logicalSessionTimeoutMinutes;
 
-    if (this.topology.loadBalanced) {
+    if (this.topology.loadBalanced && !sessionTimeoutMinutes) {
       this.sessions.unshift(session);
     }
 
