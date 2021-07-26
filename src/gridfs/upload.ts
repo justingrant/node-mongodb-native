@@ -562,7 +562,7 @@ function writeRemnant(stream: GridFSBucketWriteStream, callback?: Callback): boo
 function checkAborted(stream: GridFSBucketWriteStream, callback?: Callback<void>): boolean {
   if (stream.state.aborted) {
     if (typeof callback === 'function') {
-      callback(new MongoStreamClosedError('Stream has been aborted'));
+      callback(new MongoStreamClosedError());
     }
     return true;
   }

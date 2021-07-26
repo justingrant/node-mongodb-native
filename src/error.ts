@@ -472,7 +472,7 @@ export class MongoResourceClosedError extends MongoRuntimeError {
  * @category Error
  */
 export class MongoServerClosedError extends MongoResourceClosedError {
-  constructor(message: string) {
+  constructor(message = 'Server has been closed') {
     super(message);
   }
 
@@ -505,7 +505,7 @@ export class MongoCursorExhaustedError extends MongoCursorError {
  * @category Error
  */
 export class MongoStreamClosedError extends MongoResourceClosedError {
-  constructor(message: string) {
+  constructor(message = 'Stream has been aborted') {
     super(message);
   }
 
@@ -522,7 +522,7 @@ export class MongoStreamClosedError extends MongoResourceClosedError {
  * @category Error
  */
 export class MongoTopologyClosedError extends MongoResourceClosedError {
-  constructor(message: string) {
+  constructor(message = 'Topology has been closed') {
     super(message);
   }
 
