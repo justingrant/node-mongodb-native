@@ -1,11 +1,5 @@
 import { Writable } from 'stream';
-import {
-  MongoError,
-  AnyError,
-  MONGODB_ERROR_CODES,
-  MongoDriverError,
-  MongoGridFSStreamError
-} from '../error';
+import { MongoError, AnyError, MONGODB_ERROR_CODES, MongoDriverError } from '../error';
 import { WriteConcern } from './../write_concern';
 import { PromiseProvider } from '../promise_provider';
 import { ObjectId } from '../bson';
@@ -149,7 +143,7 @@ export class GridFSBucketWriteStream extends Writable {
   abort(callback: Callback<void>): void;
   abort(callback?: Callback<void>): Promise<void> | void {
     const Promise = PromiseProvider.get();
-    let error: MongoGridFSStreamError;
+    let error: MongoDriverError;
     if (this.state.streamEnd) {
       error = new MongoDriverError('Cannot abort a stream that has already completed');
       if (typeof callback === 'function') {
