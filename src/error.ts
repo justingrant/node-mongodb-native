@@ -189,7 +189,7 @@ export class MongoDriverError extends MongoError {
  * @category Error
  */
 export class MongoRuntimeError extends MongoDriverError {
-  protected constructor(message: string) {
+  constructor(message: string) {
     super(message);
   }
 
@@ -609,7 +609,7 @@ export class MongoParseError extends MongoDriverError {
  */
 
 export class MongoAPIError extends MongoDriverError {
-  protected constructor(message: string) {
+  constructor(message: string) {
     super(message);
   }
 
