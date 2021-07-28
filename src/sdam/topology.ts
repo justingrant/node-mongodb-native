@@ -500,28 +500,30 @@ export class Topology extends TypedEventEmitter<TopologyEvents> {
 
     this.removeListener(Topology.TOPOLOGY_DESCRIPTION_CHANGED, this.s.detectShardedTopology);
 
-    for (const session of this.s.sessions) {
-      session.endSession();
-    }
+    eachAsync(
+      Array.from(this.s.sessions.values()),
+      (session, cb) => session.endSession(cb),
+      () => {
+        this.s.sessionPool.endAllPooledSessions(() => {
+          eachAsync(
+            Array.from(this.s.servers.values()),
+            (server, cb) => destroyServer(server, this, options, cb),
+            err => {
+              this.s.servers.clear();
 
-    this.s.sessionPool.endAllPooledSessions(() => {
-      eachAsync(
-        Array.from(this.s.servers.values()),
-        (server, cb) => destroyServer(server, this, options, cb),
-        err => {
-          this.s.servers.clear();
+              // emit an event for close
+              this.emit(Topology.TOPOLOGY_CLOSED, new TopologyClosedEvent(this.s.id));
 
-          // emit an event for close
-          this.emit(Topology.TOPOLOGY_CLOSED, new TopologyClosedEvent(this.s.id));
+              stateTransition(this, STATE_CLOSED);
 
-          stateTransition(this, STATE_CLOSED);
-
-          if (typeof callback === 'function') {
-            callback(err);
-          }
-        }
-      );
-    });
+              if (typeof callback === 'function') {
+                callback(err);
+              }
+            }
+          );
+        });
+      }
+    );
   }
 
   /**

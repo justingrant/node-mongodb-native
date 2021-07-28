@@ -477,15 +477,6 @@ export function maybeClearPinnedConnection(
   //       to validate that we don't unpin on _all_ errors?
   if (conn && (options?.error == null || options?.force)) {
     const servers = Array.from(session.topology.s.servers.values());
-    if (servers.length === 0) {
-      // This can happen if the client is closed when the connection is still pinned
-      // NOTE: we don't usually do this, we could instead throw an error?
-      conn.destroy();
-
-      session[kPinnedConnection] = undefined;
-      return;
-    }
-
     const loadBalancer = servers[0];
     loadBalancer.s.pool.checkIn(conn);
     conn.emit(
