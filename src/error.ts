@@ -609,7 +609,7 @@ export class MongoParseError extends MongoDriverError {
  */
 
 export class MongoAPIError extends MongoDriverError {
-  protected constructor(message: string) {
+  constructor(message: string) {
     super(message);
   }
 
