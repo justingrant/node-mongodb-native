@@ -6,7 +6,7 @@ import { AuthMechanism } from './cmap/auth/defaultAuthProviders';
 import { ReadPreference, ReadPreferenceMode } from './read_preference';
 import { ReadConcern, ReadConcernLevel } from './read_concern';
 import { W, WriteConcern } from './write_concern';
-import { MongoAPIError, MongoCompressionError, MongoParseError, MongoURIError } from './error';
+import { MongoAPIError, MongoInvalidArgumentError, MongoParseError, MongoURIError } from './error';
 import {
   AnyOptions,
   Callback,
@@ -567,7 +567,9 @@ export const OPTIONS = {
           if (['none', 'snappy', 'zlib'].includes(String(c))) {
             compressionList.add(String(c));
           } else {
-            throw new MongoAPIError(`${c} is not a valid compression mechanism`);
+            throw new MongoInvalidArgumentError(
+              `${c} is not a valid compression mechanism. Must be 'none', 'snappy', or 'zlib'. `
+            );
           }
         }
       }
