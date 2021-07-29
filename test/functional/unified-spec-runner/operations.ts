@@ -336,7 +336,7 @@ operations.set('startTransaction', async ({ entities, operation }) => {
 });
 
 operations.set('targetedFailPoint', async ({ entities, operation }) => {
-  const session = entities.getEntity('session', operation.arguments.session);
+  const session = operation.arguments.session;
   expect(session.isPinned, 'Session must be pinned for a targetedFailPoint').to.be.true;
   const address = session.transaction.isPinned
     ? session.transaction._pinnedServer.s.description.hostAddress
