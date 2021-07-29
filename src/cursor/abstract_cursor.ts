@@ -846,7 +846,7 @@ function makeCursorStream<TSchema extends Document>(cursor: AbstractCursor<TSche
         // NOTE: This is also perhaps questionable. The rationale here is that these errors tend
         //       to be "operation interrupted", where a cursor has been closed but there is an
         //       active getMore in-flight.
-        if (cursor.killed) {
+        if (err.message.match(/interrupted/)) {
           return readable.push(null);
         }
 
